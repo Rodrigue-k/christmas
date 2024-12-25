@@ -11,11 +11,6 @@ import 'animated_text.dart';
 import 'bottom_nav_bar.dart';
 import 'christmas_tree_painter.dart';
 
-import 'package:flutter/foundation.dart'; // Pour kIsWeb
-import 'package:flutter/services.dart'; // rootBundle
-import 'dart:typed_data';
-import 'package:flutter/widgets.dart';
-
 void main() {
   runApp(const MyApp());
 }
@@ -83,8 +78,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
 
-
-
   Future<void> _generateAndDownloadImage() async {
     final recorder = ui.PictureRecorder();
     final canvas = Canvas(recorder);
@@ -116,32 +109,23 @@ class _MyHomePageState extends State<MyHomePage> {
 
     final picture = recorder.endRecording();
     final imageRendered = await picture.toImage(image.width, image.height);
-    final byteData = await imageRendered.toByteData(format: ui.ImageByteFormat.png);
+    final byteData = await imageRendered.toByteData(
+        format: ui.ImageByteFormat.png);
     final buffer = byteData!.buffer.asUint8List();
 
-    if (kIsWeb) {
-      final blob = html.Blob([buffer]);
-      final url = html.Url.createObjectUrlFromBlob(blob);
-      final anchor = html.AnchorElement(href: url)
-        ..target = 'blank'
-        ..download = 'custom_card.png'; // Le nom du fichier à télécharger
-      anchor.click(); // Simuler le clic pour démarrer le téléchargement
-    } else {
-      // Ici, vous pouvez proposer une alternative, comme enregistrer localement
-      if (kDebugMode) {
-        print("Téléchargement non supporté en dehors du Web.");
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Téléchargement non supporté sur cette plateforme.')),
-      );
-    }
+    // Créer un objet Blob et un lien de téléchargement pour le web
+    final blob = html.Blob([buffer]);
+    final url = html.Url.createObjectUrlFromBlob(blob);
+    final anchor = html.AnchorElement(href: url)
+      ..target = 'blank'
+      ..download = 'custom_card.png'; // Le nom du fichier à télécharger
+    anchor.click(); // Simuler le clic pour démarrer le téléchargement
 
     // Notifie l'utilisateur
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Image téléchargée avec succès !')),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {

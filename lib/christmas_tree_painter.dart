@@ -19,7 +19,7 @@ class ChristmasTreeSectionState extends State<ChristmasTreeSection> with SingleT
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 10), // Durée de l'animation
+      duration: const Duration(seconds: 10),
     );
 
     _animation = Tween<double>(begin: 0, end: 1).animate(
@@ -28,8 +28,6 @@ class ChristmasTreeSectionState extends State<ChristmasTreeSection> with SingleT
         curve: Curves.easeOut,
       ),
     );
-
-    // Démarre l'animation dès que la section est construite
     _controller.forward();
   }
 
@@ -74,10 +72,8 @@ class ChristmasTreePainter extends CustomPainter {
     const double height = 500;
     const double baseRadius = 120;
 
-    // Calcul du nombre de cercles qui seront dessinés en fonction de l'animation
     final maxCircles = (turns * 20 * pi * animationValue).toInt();
 
-    // Dessiner les cercles de l'arbre
     for (double t = 0; t < maxCircles * 0.1; t += 0.1) {
       final double radius = baseRadius * (1 - t / (turns * 2 * pi));
       final double x = centerX + radius * cos(t);
@@ -88,11 +84,9 @@ class ChristmasTreePainter extends CustomPainter {
       canvas.drawCircle(Offset(x, y), 5, paint);
     }
 
-    // **Créer l'étoile** : Elle n'apparaît qu'à la fin de l'animation
     if (animationValue == 1.0) {
       paint.color = Colors.yellow;
 
-      // Dessiner une vraie étoile
       Path starPath = Path();
       final starRadius = 15.0;
       final angle = pi / 5;
